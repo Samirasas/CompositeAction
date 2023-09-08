@@ -10,7 +10,7 @@ inputs:
     required: false
   image_name:
     description: "Name of the image to push"
-    required: true
+    required: false
   tag: 
     description: "How to tag the image. Default: latest"    
 
@@ -40,5 +40,5 @@ runs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: true
+          push: false
           tags: ${{inputs.registry_username}}/${{inputs.image_name}}:${{env.final_tag}}
