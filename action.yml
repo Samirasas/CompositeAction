@@ -1,13 +1,9 @@
 name: "Publish to Docker"
-description: "Build a container image and Pushes it to Docker registry"
+description: "Build a container image"
 
 inputs:
-  registry_username:
-    description: "Username for image registry"
-  registry_password:
-    description: "Password for image registry"
   image_name:
-    description: "Name of the image to push"
+    description: "Name of the image to build"
   tag: 
     description: "How to tag the image. Default: latest"    
 
@@ -16,12 +12,6 @@ runs:
   steps:
       - name: Setup BuildX
         uses: docker/setup-buildx-action@v1
-
-      - name: Login to the Registry
-        uses: docker/login-action@v1
-        with:
-          username: ${{inputs.registry_username}}
-          password: ${{inputs.registry_password}}
       
       - name: Set the tag
         shell: bash
@@ -33,9 +23,9 @@ runs:
             echo "final_tag=${{inputs.tag}}" >> $GITHUB_ENV
           fi
       
-      - name: Build and Push the Image
+      - name: Build the Image (Not pushing)
         uses: docker/build-push-action@v2
         with:
           context: .
           push: false
-          tags: ${{inputs.registry_username}}/${{inputs.image_name}}:${{env.final_tag}}
+          tags: ${{inputs.image_name}}:${{env.final_tag}}
